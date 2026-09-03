@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { SITE } from '../../data/site';
+import { CATEGORIAS } from '../../data/categorias';
+import { getArtigosPublicados } from '../../utils/artigos';
+
+export async function getStaticPaths() {
+  const artigos = await getArtigosPublicados();
+  return CATEGORIAS.map((cat) => ({
+    params: { slug: cat.slug },
+    props: { cat, artigos: artigos.filter((a) => a.data.category === cat.slug) },
+  }));
+}
+
+const { cat, artigos } = Astro.props;
+---
+
+<BaseLayout
+  title={`${cat.nome} | ${SITE.nome}`}
+  description={cat.descricao}
+  path={`/categoria/${cat.slug}/`}
+>
+  <section class="hero">
+    <div class="container">
+      <h1>{cat.emoji} {cat.nome}</h1>
+      <p>{cat.descricao}</p>
+    </div>
+  </section>
+
+  <div class="container">
+    {
+      artigos.length > 0 ? (
+        <div class="grid-artigos">
+          {artigos.map((a) => (
+            <ArticleCard artigo={a} />
+          ))}
+        </div>
+      ) : (
+        <p class="secao-sub" style="margin: 2.5rem 0;">
+          Ainda estamos preparando os primeiros artigos desta categoria. Volte em breve! 💕
+        </p>
+      )
+    }
+  </div>
+</BaseLayout>

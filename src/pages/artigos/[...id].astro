@@ -1,0 +1,99 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProdutoCTA from '../../components/ProdutoCTA.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { SITE, AVISO_AFILIADO } from '../../data/site';
+import { getCategoria } from '../../data/categorias';
+import { getArtigosPublicados } from '../../utils/artigos';
+import { formatarData } from '../../utils/data';
+
+export async function getStaticPaths() {
+  const artigos = await getArtigosPublicados();
+  return artigos.map((artigo) => ({
+    params: { id: artigo.id },
+    props: { artigo },
+  }));
+}
+
+const { artigo } = Astro.props;
+const { Content } = await render(artigo);
+const cat = getCategoria(artigo.data.category);
+const path = `/artigos/${artigo.id}/`;
+
+const relacionados = (await getArtigosPublicados())
+  .filter((a) => a.id !== artigo.id && a.data.category === artigo.data.category)
+  .slice(0, 3);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: artigo.data.title,
+  description: artigo.data.description,
+  datePublished: artigo.data.pubDate.toISOString(),
+  dateModified: (artigo.data.updatedDate ?? artigo.data.pubDate).toISOString(),
+  inLanguage: 'pt-BR',
+  author: { '@type': 'Organization', name: SITE.autor, url: SITE.url },
+  publisher: { '@type': 'Organization', name: SITE.nome, url: SITE.url },
+  mainEntityOfPage: new URL(path, SITE.url).href,
+  articleSection: cat.nome,
+  keywords: artigo.data.tags.join(', '),
+};
+---
+
+<BaseLayout
+  title={`${artigo.data.title} | ${SITE.nome}`}
+  description={artigo.data.description}
+  path={path}
+  type="article"
+  jsonLd={jsonLd}
+>
+  <article class="container-artigo">
+    <header class="artigo-cabecalho">
+      <a href={`/categoria/${cat.slug}/`} class="pill">{cat.emoji} {cat.nome}</a>
+      <h1>{artigo.data.title}</h1>
+      <p class="descricao">{artigo.data.description}</p>
+      <div class="artigo-meta">
+        Publicado em <time datetime={artigo.data.pubDate.toISOString()}>{formatarData(artigo.data.pubDate)}</time>
+        {
+          artigo.data.updatedDate && (
+            <>
+              {' '}· Atualizado em{' '}
+              <time datetime={artigo.data.updatedDate.toISOString()}>{formatarData(artigo.data.updatedDate)}</time>
+            </>
+          )
+        }
+      </div>
+    </header>
+
+    {artigo.data.produtos.length > 0 && <div class="aviso-afiliado">ℹ️ {AVISO_AFILIADO}</div>}
+
+    <div class="prosa">
+      <Content />
+    </div>
+
+    {
+      artigo.data.produtos.length > 0 && (
+        <section>
+          <h2 class="produtos-titulo">🛒 Produtos recomendados neste artigo</h2>
+          {artigo.data.produtos.map((p) => (
+            <ProdutoCTA nome={p.nome} descricao={p.descricao} link={p.link} badge={p.badge} />
+          ))}
+        </section>
+      )
+    }
+  </article>
+
+  {
+    relacionados.length > 0 && (
+      <div class="container">
+        <h2 class="secao-titulo">📚 Leia também</h2>
+        <div class="grid-artigos">
+          {relacionados.map((a) => (
+            <ArticleCard artigo={a} />
+          ))}
+        </div>
+      </div>
+    )
+  }
+</BaseLayout>

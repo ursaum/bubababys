@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../data/site';
+---
+
+<BaseLayout title={`Página não encontrada | ${SITE.nome}`} description="Essa página não existe." path="/404/">
+  <section class="hero">
+    <div class="container">
+      <h1>Ops! Essa página saiu para o passeio 🚼</h1>
+      <p>Não encontramos o que você procurava. Que tal voltar para a página inicial?</p>
+      <a href="/" class="btn-ml">Voltar ao início</a>
+    </div>
+  </section>
+</BaseLayout>

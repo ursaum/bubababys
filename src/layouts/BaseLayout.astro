@@ -1,0 +1,57 @@
+---
+import { SITE } from '../data/site';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Caminho canônico, ex.: "/artigos/melhores-carrinhos-de-bebe/" */
+  path?: string;
+  type?: 'website' | 'article';
+  jsonLd?: object;
+}
+
+const { title, description, path = Astro.url.pathname, type = 'website', jsonLd } = Astro.props;
+const canonical = new URL(path, SITE.url).href;
+---
+
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={SITE.nome} href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:site_name" content={SITE.nome} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content={type} />
+    <meta property="og:locale" content="pt_BR" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

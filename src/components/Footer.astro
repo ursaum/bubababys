@@ -1,0 +1,42 @@
+---
+import { SITE, AVISO_AFILIADO } from '../data/site';
+import { CATEGORIAS } from '../data/categorias';
+
+const ano = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>👶 {SITE.nome}</h4>
+        <p>{SITE.descricao}</p>
+      </div>
+      <div>
+        <h4>Categorias</h4>
+        <ul>
+          {
+            CATEGORIAS.map((cat) => (
+              <li>
+                <a href={`/categoria/${cat.slug}/`}>
+                  {cat.emoji} {cat.nome}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div>
+        <h4>Bubababys</h4>
+        <ul>
+          <li><a href="/sobre/">Sobre o site</a></li>
+          <li><a href="/rss.xml">Feed RSS</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-legal">
+      <p>{AVISO_AFILIADO}</p>
+      <p>© {ano} {SITE.nome}. Todos os direitos reservados.</p>
+    </div>
+  </div>
+</footer>

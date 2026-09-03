@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCategoria } from '../data/categorias';
+import { formatarData } from '../utils/data';
+
+interface Props {
+  artigo: CollectionEntry<'artigos'>;
+}
+
+const { artigo } = Astro.props;
+const cat = getCategoria(artigo.data.category);
+---
+
+<a href={`/artigos/${artigo.id}/`} class="card-artigo">
+  <div class="card-emoji">{artigo.data.emoji}</div>
+  <div class="card-corpo">
+    <div class="card-meta">
+      <span class="pill">{cat.emoji} {cat.nome}</span>
+      <time datetime={artigo.data.pubDate.toISOString()}>{formatarData(artigo.data.pubDate)}</time>
+    </div>
+    <h3>{artigo.data.title}</h3>
+    <p>{artigo.data.description}</p>
+  </div>
+</a>

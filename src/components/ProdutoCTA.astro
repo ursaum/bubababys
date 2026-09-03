@@ -1,0 +1,21 @@
+---
+interface Props {
+  nome: string;
+  descricao: string;
+  link: string;
+  badge?: string;
+}
+
+const { nome, descricao, link, badge } = Astro.props;
+---
+
+<div class="card-produto">
+  <div class="info">
+    {badge && <span class="badge">{badge}</span>}
+    <h3>{nome}</h3>
+    <p>{descricao}</p>
+  </div>
+  <a class="btn-ml" href={link} target="_blank" rel="nofollow sponsored noopener">
+    Ver no Mercado Livre →
+  </a>
+</div>

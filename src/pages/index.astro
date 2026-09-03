@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import { SITE } from '../data/site';
+import { CATEGORIAS } from '../data/categorias';
+import { getArtigosPublicados } from '../utils/artigos';
+
+const artigos = await getArtigosPublicados();
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE.nome,
+  url: SITE.url,
+  description: SITE.descricao,
+  inLanguage: 'pt-BR',
+};
+---
+
+<BaseLayout title={SITE.titulo} description={SITE.descricao} path="/" jsonLd={jsonLd}>
+  <section class="hero">
+    <div class="container">
+      <h1>Escolher o melhor para o seu bebê <span class="destaque">ficou mais fácil</span> 💕</h1>
+      <p>
+        Guias de compra, comparativos e dicas honestas para mães e pais que querem acertar na
+        escolha — sem gastar à toa.
+      </p>
+      <a href="/categoria/guias-de-compra/" class="btn-ml">Ver guias de compra</a>
+    </div>
+  </section>
+
+  <div class="container">
+    <h2 class="secao-titulo">🧭 Navegue por categoria</h2>
+    <div class="grid-categorias">
+      {
+        CATEGORIAS.map((cat) => (
+          <a href={`/categoria/${cat.slug}/`} class="card-categoria">
+            <span class="emoji">{cat.emoji}</span>
+            <span class="nome">{cat.nome}</span>
+          </a>
+        ))
+      }
+    </div>
+
+    <h2 class="secao-titulo">✨ Artigos recentes</h2>
+    <p class="secao-sub">O que estamos pesquisando e recomendando agora.</p>
+    <div class="grid-artigos">
+      {artigos.map((artigo) => <ArticleCard artigo={artigo} />)}
+    </div>
+  </div>
+</BaseLayout>

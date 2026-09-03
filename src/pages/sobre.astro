@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, AVISO_AFILIADO } from '../data/site';
+---
+
+<BaseLayout
+  title={`Sobre o ${SITE.nome}`}
+  description={`Conheça o ${SITE.nome}: como escolhemos os produtos que recomendamos e como o site se mantém.`}
+  path="/sobre/"
+>
+  <article class="container-artigo">
+    <header class="artigo-cabecalho">
+      <h1>Sobre o Bubababys 👶</h1>
+      <p class="descricao">Um guia feito com carinho para quem quer acertar nas escolhas para o bebê.</p>
+    </header>
+
+    <div class="prosa">
+      <p>
+        O <strong>Bubababys</strong> nasceu de uma dúvida que toda família conhece bem: <em>"qual é o melhor
+        produto para o meu bebê?"</em>. Entre centenas de carrinhos, berços, mamadeiras e brinquedos, é fácil
+        se perder — e gastar mais do que precisa.
+      </p>
+
+      <h2>O que fazemos</h2>
+      <p>
+        Pesquisamos, comparamos e organizamos as informações em <strong>guias de compra claros</strong>, com
+        prós e contras honestos, para que você decida com segurança. Nossos artigos cobrem enxoval, passeio,
+        alimentação, quarto do bebê e brinquedos por faixa etária.
+      </p>
+
+      <h2>Como escolhemos os produtos</h2>
+      <ul>
+        <li><strong>Segurança em primeiro lugar:</strong> priorizamos itens com certificação do INMETRO quando aplicável.</li>
+        <li><strong>Avaliações reais:</strong> analisamos o que centenas de famílias dizem sobre cada produto.</li>
+        <li><strong>Custo-benefício:</strong> indicamos opções para diferentes orçamentos, não só o mais caro.</li>
+      </ul>
+
+      <h2>Transparência</h2>
+      <p>{AVISO_AFILIADO}</p>
+      <p>
+        Nossas recomendações nunca são influenciadas por comissão: indicamos o que indicaríamos para a nossa
+        própria família.
+      </p>
+    </div>
+  </article>
+</BaseLayout>
