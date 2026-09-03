@@ -19,10 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Ativar GitHub Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - uses: withastro/action@v3
         with:
           node-version: 22
